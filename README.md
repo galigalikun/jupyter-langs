@@ -25,6 +25,7 @@ Docker images of Jupyter Lab for various languages.
 | [Scala](https://www.scala-lang.org/) |2.13.4|[almond](https://github.com/almond-sh/almond)|
 | Sparql||[SPARQL kernel](https://github.com/paulovn/sparql-kernel)|
 | [Typescript](https://www.typescriptlang.org/) | 4.4.4 | [tslab](https://github.com/yunabe/tslab)|
+| [PHP](https://www.php.net/) | 8.0.11 | [jupyter-php](https://github.com/Litipk/Jupyter-PHP-Installer)|
 
 * Enabled [Plotly](https://plotly.com/python/), Dash and [leaflet](https://ipyleaflet.readthedocs.io/en/latest/) in Python.
 * Enabled [Plotly](https://plotly.com/python/) in R, Julia.

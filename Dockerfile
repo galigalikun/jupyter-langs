@@ -178,7 +178,43 @@ RUN ln -s ${DOTNET_ROOT}/dotnet /usr/bin/dotnet \
 RUN dotnet tool install -g --add-source "https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json" Microsoft.dotnet-interactive \
     && dotnet interactive jupyter install
 
-# ↓ 削除系ははまとめてここでやる    
+# Install php
+ENV PHP_VERSION=8.0.11
+ENV PHP_HOME=/opt/php
+RUN apt-get update -y \
+    && apt-get install -y --no-install-recommends \
+    curl \
+    libzmq3-dev \
+    zlib1g-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libicu-dev \
+    libonig-dev \
+    libxml2-dev \
+    libsqlite3-dev \
+    libreadline-dev \
+    libtidy-dev \
+    libxslt-dev \
+    libzip-dev \
+    libbz2-dev \
+    autoconf \
+    pkg-config
+RUN git clone https://github.com/php-build/php-build.git \
+    && PREFIX=/usr/local ./php-build/install.sh \
+    && mkdir -p ${PHP_HOME} \
+    && PHP_BUILD_CONFIGURE_OPTS="--without-curl" php-build ${PHP_VERSION} ${PHP_HOME}/${PHP_VERSION}
+ENV PATH=${PHP_HOME}/${PHP_VERSION}/bin:$PATH
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=${PHP_HOME}/${PHP_VERSION}/bin --filename=composer --version=1.10.15
+RUN git clone git://github.com/zeromq/php-zmq.git && cd php-zmq \
+    phpize \
+    ./configure \
+    make \
+    make install \
+    echo 'extension=zmq' > ${PHP_HOME}/${PHP_VERSION}/etc/conf.d/zmq.ini
+RUN wget https://litipk.github.io/Jupyter-PHP-Installer/dist/jupyter-php-installer.phar \
+    && php ./jupyter-php-installer.phar install
+
+# ↓ 削除系ははまとめてここでやる
 RUN conda clean --all \
     && apt-get autoremove \
     && apt-get clean \
